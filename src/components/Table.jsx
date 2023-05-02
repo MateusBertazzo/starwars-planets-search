@@ -3,7 +3,7 @@ import Context from '../context/Context';
 import Form from './Form';
 
 function Table() {
-  const { data, inputName } = useContext(Context);
+  const { data, filterInputName } = useContext(Context);
   return (
     <section>
       <Form />
@@ -26,7 +26,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          { data.filter((e) => (e.name.includes(inputName))).map((element) => (
+          { data.filter((e) => (e.name.includes(filterInputName))).map((element) => (
             <tr key={ element.name }>
               <td>{element.name}</td>
               <td>{element.rotation_period}</td>

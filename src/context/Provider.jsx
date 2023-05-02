@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Context from './Context';
 
+const COLUM = [
+  'population',
+  'orbital_period',
+  'diameter',
+  'rotation_period',
+  'surface_water',
+];
+
 function Provider({ children }) {
   const [data, setData] = useState([]);
-  const [inputName, setInputName] = useState('');
+  const [filterInputName, setFilterInputName] = useState('');
+  const [filterColumn, setFilterColumn] = useState(COLUM);
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -16,11 +25,17 @@ function Provider({ children }) {
     fetchApi();
   }, []);
 
-  const values = {
+  const values = useMemo(() => ({
     data,
-    inputName,
-    setInputName,
-  };
+    filterInputName,
+    setFilterInputName,
+    filterColumn,
+    setFilterColumn,
+  }), [data,
+    filterInputName,
+    setFilterInputName,
+    filterColumn,
+    setFilterColumn]);
 
   return (
     <Context.Provider value={ values }>
