@@ -1,10 +1,12 @@
 import React, { useContext } from 'react';
 import Context from '../context/Context';
+import Form from './Form';
 
 function Table() {
-  const { data } = useContext(Context);
+  const { data, inputName } = useContext(Context);
   return (
     <section>
+      <Form />
       <table>
         <thead>
           <tr>
@@ -24,7 +26,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          { data.map((element) => (
+          { data.filter((e) => (e.name.includes(inputName))).map((element) => (
             <tr key={ element.name }>
               <td>{element.name}</td>
               <td>{element.rotation_period}</td>

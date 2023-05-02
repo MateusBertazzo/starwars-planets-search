@@ -4,6 +4,7 @@ import Context from './Context';
 
 function Provider({ children }) {
   const [data, setData] = useState([]);
+  const [inputName, setInputName] = useState('');
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -17,6 +18,8 @@ function Provider({ children }) {
 
   const values = {
     data,
+    inputName,
+    setInputName,
   };
 
   return (
