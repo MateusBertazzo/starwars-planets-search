@@ -30,6 +30,12 @@ function Provider({ children }) {
   }, []);
 
   const handleFilter = useCallback(() => {
+    setFilterColumn(filterColumn.filter((option) => option !== allFilters.column));
+    setAllFilters({
+      ...allFilters,
+      column: filterColumn[0],
+    });
+
     if (allFilters.comparison.includes('maior que')) {
       const filtered = data
         .filter((e) => Number(e[allFilters.column] > Number(allFilters.number)));
@@ -37,16 +43,22 @@ function Provider({ children }) {
       setFilterMethod((prevState) => [...prevState, allFilters]);
     } else if (allFilters.comparison.includes('menor que')) {
       const filtered = data
-        .filter((e) => Number(e[allFilters.column]) < allFilters.number);
+        .filter((e) => Number(e[allFilters.column]) < Number(allFilters.number));
       setData(filtered);
       setFilterMethod((prevState) => [...prevState, allFilters]);
     } else if (allFilters.comparison.includes('igual a')) {
       const filtered = data
-        .filter((e) => Number(e[allFilters.column] === allFilters.number));
+        .filter((e) => Number(e[allFilters.column] === Number(allFilters.number)));
       setData(filtered);
       setFilterMethod((prevState) => [...prevState, allFilters]);
     }
-  }, [data, allFilters]);
+  }, [data, allFilters, filterColumn]);
+
+  const removeFilter = useCallback((filterRemove, column) => {
+    setFilterColumn([...filterColumn, column]);
+    const newFilters = filtredMethod.filter((_, index) => index !== filterRemove);
+    setFilterMethod(newFilters);
+  }, [filtredMethod, filterColumn]);
 
   const values = useMemo(() => ({
     data,
@@ -59,6 +71,7 @@ function Provider({ children }) {
     filtredMethod,
     setFilterMethod,
     handleFilter,
+    removeFilter,
   }), [data,
     filterInputName,
     setFilterInputName,
@@ -68,7 +81,9 @@ function Provider({ children }) {
     setAllFilters,
     filtredMethod,
     setFilterMethod,
-    handleFilter]);
+    handleFilter,
+    removeFilter,
+  ]);
 
   return (
     <Context.Provider value={ values }>
