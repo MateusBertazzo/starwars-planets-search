@@ -46,6 +46,9 @@ describe('Testa aplicação', () => {
 
   const getButton = screen.getByTestId('button-filter');
   userEvent.click(getButton)
+
+  const getFilter = screen.getByText(/population maior que 0/i)
+  expect(getFilter).toBeInTheDocument()
   })
 
   it('testa o filtro de numero', () => {
@@ -90,5 +93,34 @@ describe('Testa aplicação', () => {
 
     const getButton2 = screen.getByTestId('button-filter');
     userEvent.click(getButton2)
+  })
+
+  it('testa o button de excluir all', async () => {
+    render(<App />)
+
+    const getButtonFilter = screen.getByTestId('button-filter');
+    const getButtonRemoveAll = screen.getByRole('button', {  name: /delete filters/i})
+
+    userEvent.click(getButtonFilter)
+    
+    const getRemoveFilter = screen.getByRole('button', {  name: /remover/i});
+
+    expect(getRemoveFilter).toBeInTheDocument();
+
+    userEvent.click(getButtonRemoveAll);
+
+    expect(getRemoveFilter).not.toBeInTheDocument()
+  })
+
+  it('testa cada input e clica em filtrar', async () => {
+    render(<App />)
+    const getButtonFilter = await screen.findByTestId('button-filter', '', {timeout: 5000})
+    userEvent.click(getButtonFilter)
+
+    const filterRemove = screen.getByRole('button', {  name: /remover/i})
+    expect(filterRemove).toBeInTheDocument()
+
+    userEvent.click(filterRemove)
+    expect(filterRemove).not.toBeInTheDocument()
   })
 })

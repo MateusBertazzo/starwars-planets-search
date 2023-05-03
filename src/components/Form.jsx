@@ -87,7 +87,7 @@ function Form() {
         ))}
 
         <button data-testid="button-remove-filters" onClick={ () => removeAll() }>
-          Remover All
+          Delete Filters
         </button>
       </div>
     </div>
