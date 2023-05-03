@@ -12,19 +12,20 @@ const COLUM = [
 
 function Provider({ children }) {
   const [data, setData] = useState([]);
+  const [initialApi, setInitialApi] = useState([]);
   const [filterInputName, setFilterInputName] = useState('');
   const [filterColumn, setFilterColumn] = useState(COLUM);
   const [allFilters, setAllFilters] = useState({
     column: 'population', comparison: 'maior que', number: 0,
   });
   const [filtredMethod, setFilterMethod] = useState([]);
-
   useEffect(() => {
     const fetchApi = async () => {
       const response = await fetch('https://swapi.dev/api/planets');
       const json = await response.json();
       json.results.forEach((e) => delete e.residents);
       setData(json.results);
+      setInitialApi(json.results);
     };
     fetchApi();
   }, []);
@@ -60,6 +61,40 @@ function Provider({ children }) {
     setFilterMethod(newFilters);
   }, [filtredMethod, filterColumn]);
 
+  const removeAll = useCallback(() => {
+    setFilterMethod([]);
+    setFilterColumn(COLUM);
+  }, []);
+
+  const newHandleFilter = useCallback((column, comparison, value) => {
+    switch (comparison) {
+    case 'maior que': {
+      return +column > +value;
+    }
+    case 'menor que': {
+      return +column < +value;
+    }
+    case 'igual a': {
+      return +column === +value;
+    }
+    default:
+      return true;
+    }
+  }, []);
+
+  useEffect(() => {
+    let newDataFiltred = [...initialApi];
+    filtredMethod.forEach(({ column, comparison, number }) => {
+      newDataFiltred = newDataFiltred
+        .filter((planet) => newHandleFilter(
+          Number(planet[column]),
+          comparison,
+          number,
+        ));
+    });
+    setData(newDataFiltred);
+  }, [filtredMethod, newHandleFilter, initialApi]);
+
   const values = useMemo(() => ({
     data,
     filterInputName,
@@ -72,6 +107,7 @@ function Provider({ children }) {
     setFilterMethod,
     handleFilter,
     removeFilter,
+    removeAll,
   }), [data,
     filterInputName,
     setFilterInputName,
@@ -83,6 +119,7 @@ function Provider({ children }) {
     setFilterMethod,
     handleFilter,
     removeFilter,
+    removeAll,
   ]);
 
   return (

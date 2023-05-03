@@ -4,7 +4,7 @@ import Context from '../context/Context';
 function Form() {
   const {
     filterInputName, setFilterInputName, filterColumn, allFilters,
-    setAllFilters, handleFilter, removeFilter, filtredMethod,
+    setAllFilters, handleFilter, removeFilter, filtredMethod, removeAll,
   } = useContext(Context);
 
   const handleChange = ({ target }) => {
@@ -74,7 +74,7 @@ function Form() {
 
       <div>
         {filtredMethod.map(({ column, comparison, number }, index) => (
-          <div key={ index }>
+          <div data-testid="filter" key={ index }>
             <p>{`${column} ${comparison} ${number}`}</p>
             <button
               type="button"
@@ -85,6 +85,10 @@ function Form() {
             </button>
           </div>
         ))}
+
+        <button data-testid="button-remove-filters" onClick={ () => removeAll() }>
+          Remover All
+        </button>
       </div>
     </div>
   );
