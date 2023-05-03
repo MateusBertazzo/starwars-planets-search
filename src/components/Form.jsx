@@ -1,17 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import Context from '../context/Context';
 
 function Form() {
-  const { filterInputName, setFilterInputName, filterColumn } = useContext(Context);
-
-  const [allFilters, setAllFilters] = useState({
-    column: 'population', comparison: 'maior que', number: 0,
-  });
+  const {
+    filterInputName, setFilterInputName, filterColumn, allFilters,
+    setAllFilters, handleFilter,
+  } = useContext(Context);
 
   const handleChange = ({ target }) => {
     const { value, name } = target;
     setAllFilters((prevState) => ({ ...prevState, [name]: value }));
   };
+
   return (
     <div>
       <label htmlFor="name">
@@ -64,7 +64,11 @@ function Form() {
         onChange={ handleChange }
       />
 
-      <button type="button" data-testid="button-filter">
+      <button
+        onClick={ handleFilter }
+        type="button"
+        data-testid="button-filter"
+      >
         Filtrar
       </button>
     </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Context from './Context';
 
@@ -14,6 +14,10 @@ function Provider({ children }) {
   const [data, setData] = useState([]);
   const [filterInputName, setFilterInputName] = useState('');
   const [filterColumn, setFilterColumn] = useState(COLUM);
+  const [allFilters, setAllFilters] = useState({
+    column: 'population', comparison: 'maior que', number: 0,
+  });
+  const [filtredMethod, setFilterMethod] = useState([]);
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -25,21 +29,50 @@ function Provider({ children }) {
     fetchApi();
   }, []);
 
+  const handleFilter = useCallback(() => {
+    if (allFilters.comparison.includes('maior que')) {
+      const filtered = data
+        .filter((e) => Number(e[allFilters.column] > Number(allFilters.number)));
+      setData(filtered);
+      setFilterMethod((prevState) => [...prevState, allFilters]);
+    } else if (allFilters.comparison.includes('menor que')) {
+      const filtered = data
+        .filter((e) => Number(e[allFilters.column]) < allFilters.number);
+      setData(filtered);
+      setFilterMethod((prevState) => [...prevState, allFilters]);
+    } else if (allFilters.comparison.includes('igual a')) {
+      const filtered = data
+        .filter((e) => Number(e[allFilters.column] === allFilters.number));
+      setData(filtered);
+      setFilterMethod((prevState) => [...prevState, allFilters]);
+    }
+  }, [data, allFilters]);
+
   const values = useMemo(() => ({
     data,
     filterInputName,
     setFilterInputName,
     filterColumn,
     setFilterColumn,
+    allFilters,
+    setAllFilters,
+    filtredMethod,
+    setFilterMethod,
+    handleFilter,
   }), [data,
     filterInputName,
     setFilterInputName,
     filterColumn,
-    setFilterColumn]);
+    setFilterColumn,
+    allFilters,
+    setAllFilters,
+    filtredMethod,
+    setFilterMethod,
+    handleFilter]);
 
   return (
     <Context.Provider value={ values }>
-      { children }
+      {children}
     </Context.Provider>
   );
 }
