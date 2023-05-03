@@ -5,6 +5,7 @@ import Table from './components/Table';
 function App() {
   return (
     <section>
+      <h1>Star Wars Planets</h1>
       <Provider>
         <Table />
       </Provider>
