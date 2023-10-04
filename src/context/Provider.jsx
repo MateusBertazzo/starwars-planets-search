@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Context from './Context';
 
-const COLUM = [
+const initialCOLUM = [
   'population',
   'orbital_period',
   'diameter',
@@ -14,11 +14,11 @@ function Provider({ children }) {
   const [data, setData] = useState([]);
   const [initialApi, setInitialApi] = useState([]);
   const [filterInputName, setFilterInputName] = useState('');
-  const [filterColumn, setFilterColumn] = useState(COLUM);
-  const [allFilters, setAllFilters] = useState({
-    column: 'population', comparison: 'maior que', number: 0,
-  });
+  const [filterColumn, setFilterColumn] = useState(initialCOLUM);
   const [filtredMethod, setFilterMethod] = useState([]);
+  const [allFilters, setAllFilters] = useState({
+    column: 'Selecione...', comparison: 'maior que', number: 0,
+  });
   useEffect(() => {
     const fetchApi = async () => {
       const response = await fetch('https://swapi.dev/api/planets');
@@ -63,7 +63,7 @@ function Provider({ children }) {
 
   const removeAll = useCallback(() => {
     setFilterMethod([]);
-    setFilterColumn(COLUM);
+    setFilterColumn(initialCOLUM);
   }, []);
 
   const newHandleFilter = useCallback((column, comparison, value) => {

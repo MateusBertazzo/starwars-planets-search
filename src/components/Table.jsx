@@ -4,6 +4,8 @@ import Form from './Form';
 
 function Table() {
   const { data, filterInputName } = useContext(Context);
+  const dataFiltered = data
+    .filter((e) => (e.name.toLowerCase().includes(filterInputName.toLowerCase())));
   return (
     <section>
       <Form />
@@ -26,7 +28,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          { data.filter((e) => (e.name.includes(filterInputName))).map((element) => (
+          { dataFiltered.map((element) => (
             <tr key={ element.name }>
               <td>{element.name}</td>
               <td>{element.rotation_period}</td>

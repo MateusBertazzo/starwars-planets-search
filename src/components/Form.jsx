@@ -3,8 +3,15 @@ import Context from '../context/Context';
 
 function Form() {
   const {
-    filterInputName, setFilterInputName, filterColumn, allFilters,
-    setAllFilters, handleFilter, removeFilter, filtredMethod, removeAll,
+    filterInputName,
+    setFilterInputName,
+    filterColumn,
+    allFilters,
+    setAllFilters,
+    handleFilter,
+    removeFilter,
+    filtredMethod,
+    removeAll,
   } = useContext(Context);
 
   const handleChange = ({ target }) => {
@@ -35,8 +42,9 @@ function Form() {
           value={ allFilters.column }
           onChange={ handleChange }
         >
+          <option id="column">Selecione...</option>
           { filterColumn.map((option) => (
-            <option key={ option } value={ option }>{ option }</option>
+            <option id="column" key={ option } value={ option }>{ option }</option>
           )) }
         </select>
       </label>
@@ -75,7 +83,9 @@ function Form() {
       <div>
         {filtredMethod.map(({ column, comparison, number }, index) => (
           <div data-testid="filter" key={ index }>
-            <p>{`${column} ${comparison} ${number}`}</p>
+            <p>
+              {`${column.toUpperCase()} ${comparison.toUpperCase()} ${number}`}
+            </p>
             <button
               type="button"
               onClick={ () => removeFilter(index, column) }
@@ -86,7 +96,10 @@ function Form() {
           </div>
         ))}
 
-        <button data-testid="button-remove-filters" onClick={ () => removeAll() }>
+        <button
+          data-testid="button-remove-filters"
+          onClick={ () => removeAll() }
+        >
           Delete Filters
         </button>
       </div>
